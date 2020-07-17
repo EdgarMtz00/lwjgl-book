@@ -4,10 +4,7 @@ import com.edgarmtz.engine.IGameLogic;
 import com.edgarmtz.engine.controllers.MouseInput;
 import com.edgarmtz.engine.entities.Camera;
 import com.edgarmtz.engine.entities.GameObject;
-import com.edgarmtz.engine.graphics.Mesh;
-import com.edgarmtz.engine.graphics.Renderer;
-import com.edgarmtz.engine.graphics.Texture;
-import com.edgarmtz.engine.graphics.WindowManager;
+import com.edgarmtz.engine.graphics.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -130,26 +127,11 @@ public class DummyGame implements IGameLogic {
                 4, 6, 7, 5, 4, 7,};
 
         Texture texture = new Texture("/textures/grassblock.png");
-        Mesh mesh = new Mesh(positions, textCoords, indices, texture);
+        Mesh mesh = ObjLoader.loadMesh("/models/cube.obj");
+        mesh.setTexture(texture);
         GameObject gameObject = new GameObject(mesh);
 
-        GameObject gameObject1 = new GameObject(mesh);
-        gameObject1.setScale(0.5f);
-        gameObject1.setPosition(-0.5f, -0.5f, -1);
-
-        GameObject gameObject2 = new GameObject(mesh);
-        gameObject2.setScale(0.5f);
-        gameObject2.setPosition(-1.0f, -1, -1);
-
-        GameObject gameObject3 = new GameObject(mesh);
-        gameObject3.setScale(0.5f);
-        gameObject3.setPosition(-0.5f, -.5f, -1.5f);
-
-        GameObject gameObject4 = new GameObject(mesh);
-        gameObject4.setScale(0.5f);
-        gameObject4.setPosition(-1.0f, -0.5f, -1.5f);
-
-        gameObjects = new GameObject[]{gameObject, gameObject1, gameObject2, gameObject3, gameObject4};
+        gameObjects = new GameObject[]{gameObject};
     }
 
     @Override

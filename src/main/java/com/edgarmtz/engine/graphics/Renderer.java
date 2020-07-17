@@ -12,7 +12,7 @@ public class Renderer {
     private ShaderProgram shaderProgram;
     private static final float FOV = (float) Math.toRadians((60.0f));
     private static final float Z_NEAR = 0.01f;
-    private static final float Z_FAR = 5.0f;
+    private static final float Z_FAR = 250.0f;
     private final Transformation transformation;
 
     public Renderer(){
@@ -27,6 +27,8 @@ public class Renderer {
         shaderProgram.createUniform("projectionMatrix");
         shaderProgram.createUniform("worldMatrix");
         shaderProgram.createUniform("texture_sampler");
+        shaderProgram.createUniform("color");
+        shaderProgram.createUniform("useColor");
     }
 
     public void render(WindowManager window, Camera camera, GameObject[] gameObjects){
@@ -47,9 +49,12 @@ public class Renderer {
         Matrix4f viewMatrix = transformation.getViewMatrix(camera);
 
         for (GameObject gameObject : gameObjects) {
+            Mesh mesh = gameObject.getMesh();
             Matrix4f worldMatrix = transformation.getModelViewMatrix(gameObject, viewMatrix);
             shaderProgram.setUniform("worldMatrix", worldMatrix);
-            gameObject.getMesh().render();
+            shaderProgram.setUniform("color", mesh.getColor());
+            shaderProgram.setUniform("useColor", mesh.isTextured() ? 0 : 1);
+            mesh.render();
         }
 
         shaderProgram.unbind();

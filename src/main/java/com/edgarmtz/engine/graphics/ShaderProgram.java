@@ -1,6 +1,7 @@
 package com.edgarmtz.engine.graphics;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.FloatBuffer;
@@ -95,5 +96,9 @@ public class ShaderProgram {
 
     public void setUniform(String name, int value){
         glUniform1i(uniforms.get(name), value);
+    }
+
+    public void setUniform(String name, Vector3f value){
+        glUniform3f(uniforms.get(name), value.x, value.y, value.z);
     }
 }
