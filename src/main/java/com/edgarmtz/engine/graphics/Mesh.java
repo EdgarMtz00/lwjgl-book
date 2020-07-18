@@ -15,6 +15,9 @@ import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
 
+/**
+ * Create, store and render a model and it's texture
+ */
 public class Mesh {
     private static final Vector3f DEFAULT_COLOR = new Vector3f(1.0f, 1.0f, 1.0f);
 
@@ -24,7 +27,14 @@ public class Mesh {
     private Vector3f color;
     private Texture texture;
 
-    public Mesh(float[] positions, float[]textureCoord, float[] normals, int[]indices){
+    /**
+     * Creates buffers with model's data and store them in gpu memory to be drawn later
+     * @param positions Model vertices position
+     * @param textureCoordinates Texture coordinates where it would be applied
+     * @param normals Normal vectors position
+     * @param indices Vertices indices grouped to define model faces
+     */
+    public Mesh(float[] positions, float[] textureCoordinates, float[] normals, int[]indices){
         int vboId;
         vboIdList = new ArrayList<>();
 
@@ -54,8 +64,8 @@ public class Mesh {
             //Color
             vboId = glGenBuffers();
             vboIdList.add(vboId);
-            textureCoordBuffer = MemoryUtil.memAllocFloat(textureCoord.length);
-            textureCoordBuffer.put(textureCoord).flip();
+            textureCoordBuffer = MemoryUtil.memAllocFloat(textureCoordinates.length);
+            textureCoordBuffer.put(textureCoordinates).flip();
             glBindBuffer(GL_ARRAY_BUFFER, vboId);
             glBufferData(GL_ARRAY_BUFFER, textureCoordBuffer, GL_STATIC_DRAW);
             glEnableVertexAttribArray(1);
@@ -100,6 +110,9 @@ public class Mesh {
         return vertexCount;
     }
 
+    /**
+     * Deletes any temporary data stored in systems memory
+     */
     public void cleanup(){
         glDisableVertexAttribArray(0);
 
@@ -117,6 +130,9 @@ public class Mesh {
         glDeleteVertexArrays(vaoId);
     }
 
+    /**
+     * Indicates gpu to draw the model with it's defined data
+     */
     public void render(){
         // Activate first texture unit
         glActiveTexture(GL_TEXTURE0);

@@ -156,7 +156,7 @@ public class DummyGame implements IGameLogic {
                cameraDisplacement.z * CAMERA_POS_STEP);
 
        if(mouseInput.isRightButtonPressed()) {
-           Vector2f rotationVector = mouseInput.getDisplVec();
+           Vector2f rotationVector = mouseInput.getDisplacementVec();
            camera.moveRotation(rotationVector.y * MOUSE_SENSITIVITY, rotationVector.x * MOUSE_SENSITIVITY, 0);
        }
     }

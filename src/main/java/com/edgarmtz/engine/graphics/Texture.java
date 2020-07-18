@@ -10,17 +10,27 @@ import java.nio.ByteBuffer;
 import static org.lwjgl.opengl.ARBInternalformatQuery2.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * Represents a texture from a image file and loads it into gpu
+ */
 public class Texture {
     private int id;
 
-    private Texture(int id){
-        this.id = id;
-    }
-
+    /**
+     * Creates and load a texture with {@link #loadTexture(String)} 
+     * @param TextureName Png image name
+     * @throws Exception if failed to load texture
+     */
     public Texture(String  TextureName) throws Exception{
-        this(loadTexture(TextureName));
+        this.id = loadTexture(TextureName);
     }
 
+    /**
+     * Decodes a png image and loads it's content into gpu as a buffer texture 
+     * @param textureName Png image name
+     * @return Id associated to created texture in gpu memory
+     * @throws Exception if image doesn't exist or can't be decoded
+     */
     public static int loadTexture(String textureName) throws Exception{
         // Get texture Image
         PNGDecoder pngDecoder = new PNGDecoder(Resources.loadResource(textureName));
@@ -42,6 +52,9 @@ public class Texture {
         return id;
     }
 
+    /**
+     * Deletes any temporary data stored in systems memory
+     */
     public void cleanup() {
         glDeleteTextures(id);
     }

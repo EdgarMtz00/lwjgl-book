@@ -7,8 +7,17 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Provides functionality to work with obj files
+ */
 public class ObjLoader {
 
+    /**
+     * Loads a obj file and converts it into a mesh representing the file's model
+     * @param fileName Obj file
+     * @return Mesh representing target file's model
+     * @throws Exception If file doesn't exists or it's content can't be parsed
+     */
     public static Mesh loadMesh(String fileName) throws Exception {
         List<Vector3f> vertices = new ArrayList<>();
         List<Vector2f> textures = new ArrayList<>();
@@ -50,6 +59,14 @@ public class ObjLoader {
         return reorderLists(vertices, textures, normals, faces);
     }
 
+    /**
+     * Orders file read data so it can be converted into a valid model
+     * @param verticesCoord Vertices position list
+     * @param texturesCoord Texture position list
+     * @param normalsCoord Normal vectors position list
+     * @param faces List of faces formed in the model
+     * @return Mesh made with properly related data
+     */
     private static Mesh reorderLists(List<Vector3f> verticesCoord, List<Vector2f> texturesCoord, List<Vector3f> normalsCoord, List<Face> faces ) {
         List<Integer> indices = new ArrayList<>();
 
@@ -74,6 +91,15 @@ public class ObjLoader {
         return new Mesh(verticesArray, texturesArray, normalsArray, indicesArray);
     }
 
+    /**
+     * Groups and order vertices indices, texture position and normal  vector to correctly represent a face
+     * @param indices Vertices indices
+     * @param texturesCoord Texture position
+     * @param normalsCoord Normal Vector
+     * @param indicesList Resulting indices list
+     * @param texturesArray Resulting texture array
+     * @param normalsArray Resulting normal vectors array
+     */
     private static void processFaceVertex(IndexGroup indices, List<Vector2f> texturesCoord, List<Vector3f> normalsCoord,
                                           List<Integer> indicesList, float[] texturesArray, float[] normalsArray) {
         int positionIndex = indices.indexPosition;
@@ -93,6 +119,9 @@ public class ObjLoader {
         }
     }
 
+    /**
+     * Stores a face point's vertex, texture and normal vector's indices
+     */
     protected static class IndexGroup{
         public static final int NO_VALUE = -1;
         public int indexPosition;
@@ -106,6 +135,9 @@ public class ObjLoader {
         }
     }
 
+    /**
+     * Represents a model's face with three points
+     */
     protected static class Face {
         private IndexGroup[] indexGroups = new IndexGroup[3];
 
@@ -115,6 +147,11 @@ public class ObjLoader {
             indexGroups[2] = parseLine(v2);
         }
 
+        /**
+         * parse line from obj file into a polygon's line
+         * @param line Extracted text from obj file
+         * @return One point data
+         */
         public IndexGroup parseLine(String line){
             IndexGroup indexGroup = new IndexGroup();
             String[] lineTokens = line.split("/");

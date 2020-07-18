@@ -10,6 +10,9 @@ import java.util.Map;
 
 import static org.lwjgl.opengl.GL20.*;
 
+/**
+ * Manages all shaders programs loaded into gpu
+ */
 public class ShaderProgram {
     private final int programId;
     private int vertexShaderId;
@@ -23,6 +26,13 @@ public class ShaderProgram {
             throw new Exception("Couldn't create openGl program");
     }
 
+    /**
+     * Loads a shader program code and assigns it an id
+     * @param shaderCode Code from shader program
+     * @param shaderType Indicates if program is a fragment shader or vertex shader
+     * @return Shader Program associated id
+     * @throws Exception if failed to assign an id or to compile shader code
+     */
     protected int createShader(String shaderCode, int shaderType) throws Exception{
         int shaderId = glCreateShader(shaderType);
 
@@ -39,14 +49,28 @@ public class ShaderProgram {
         return shaderId;
     }
 
+    /**
+     * Use {@link #createShader(String, int)} to specifically create a vertex shader
+     * @param shaderCode Code from shader program
+     * @throws Exception if failed to assign an id or to compile shader code
+     */
     public void createVertexShader(String shaderCode) throws  Exception{
         vertexShaderId = createShader(shaderCode, GL_VERTEX_SHADER);
     }
 
+    /**
+     * Use {@link #createShader(String, int)} to specifically create a fragment shader
+     * @param shaderCode Code from shader program
+     * @throws Exception if failed to assign an id or to compile shader code
+     */
     public void createFragmentShader(String shaderCode) throws Exception{
         fragmentShaderId = createShader(shaderCode, GL_FRAGMENT_SHADER);
     }
 
+    /**
+     * Links all programs with uniforms and validates them
+     * @throws Exception if failed to link or linked an invalid program
+     */
     public  void link() throws  Exception{
         glLinkProgram(programId);
 
@@ -64,14 +88,23 @@ public class ShaderProgram {
             throw new Exception("Warning validating program: " + glGetProgramInfoLog(programId, 1024));
     }
 
+    /**
+     * Installs the program as the current rendering program
+     */
     public void bind(){
         glUseProgram(programId);
     }
 
+    /**
+     * Removes the current rendering program
+     */
     public void unbind(){
         glUseProgram(0);
     }
 
+    /**
+     * Deletes any temporary data stored in systems memory
+     */
     public void cleanup(){
         unbind();
         if(programId != 0){
